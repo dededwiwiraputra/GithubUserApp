@@ -1,5 +1,5 @@
 package com.example.mysubmissionawal
 
 object Utils {
-    const val token = "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"
+    const val token = "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"
 }
