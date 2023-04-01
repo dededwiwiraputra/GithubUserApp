@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 class UserListAdapter(private val listUser: ArrayList<UserModel>) : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.layout_user_list, viewGroup, false))
 
