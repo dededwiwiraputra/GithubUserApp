@@ -1,8 +1,6 @@
 package com.example.mysubmissionawal
 
-import com.example.mysubmissionawal.Utils.token
-import com.example.mysubmissionawal.detail.DetailUser
-import com.google.gson.JsonObject
+import com.example.mysubmissionawal.Utilility.token
 import retrofit2.Call
 import retrofit2.http.*
 
