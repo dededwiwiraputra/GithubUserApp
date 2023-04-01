@@ -1,6 +1,8 @@
 package com.example.mysubmissionawal
 
 import com.example.mysubmissionawal.Utils.token
+import com.example.mysubmissionawal.detail.DetailUser
+import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -20,7 +22,7 @@ interface ApiService {
     @Headers("Authorization: token $token")
     fun getDetailUser(
         @Path("username") username: String
-    ): Call<GithubResponse>
+    ):Call<DetailUsers>
 
     @GET("users/{username}/followers")
     @Headers("Authorization: token $token")

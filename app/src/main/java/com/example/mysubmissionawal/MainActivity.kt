@@ -2,6 +2,7 @@ package com.example.mysubmissionawal
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mysubmissionawal.databinding.ActivityMainBinding
+import com.example.mysubmissionawal.detail.DetailUser
 
 class MainActivity : AppCompatActivity() {
 
@@ -55,12 +57,33 @@ class MainActivity : AppCompatActivity() {
         val listUser = ArrayList<UserModel>()
         for (user in userDatas) {
             listUser.add(
-                UserModel(user.login, user.id, user.avatarUrl)
+                UserModel(
+                    "",
+                    user.id,
+                    user.avatarUrl,
+                    user.followersUrl,
+                    user.followingUrl,
+                    user.login
+                )
             )
         }
 
         val adapter = UserListAdapter(listUser)
         binding.rvUser.adapter = adapter
+
+        adapter.setOnItemClickCallback(object : UserListAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: UserModel) {
+                searchUser.loginUser(data.login).observe(this@MainActivity) {
+                    startActivity(
+                        Intent(this@MainActivity, DetailUser::class.java).putExtra(
+                            DetailUser.GET_USER,
+                            getAllUserDetailData(it)
+                        )
+                    )
+                }
+            }
+        })
+
         Log.d("TEST", "Hayolo")
     }
 
@@ -98,7 +121,12 @@ class MainActivity : AppCompatActivity() {
 
                     return true
                 }
+
                 override fun onQueryTextChange(newText: String): Boolean {
+                    mainViewModel.listUser.observe(this@MainActivity) { userDatas ->
+                        Log.d(TAG, "$userDatas")
+                        getUserData(userDatas)
+                    }
                     return false
                 }
             })
@@ -106,5 +134,17 @@ class MainActivity : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
+
+    private fun getAllUserDetailData(item: DetailUsers?): UserModel {
+        return UserModel(
+            item!!.name,
+            0,
+            item.avatarUrl,
+            item.followersUrl,
+            item.followingUrl,
+            item.login
+        )
+    }
+
 
 }

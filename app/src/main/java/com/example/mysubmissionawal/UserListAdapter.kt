@@ -8,10 +8,24 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class UserListAdapter(private val listUser: ArrayList<UserModel>) : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
+class UserListAdapter(private val listUser: ArrayList<UserModel>) :
+    RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
+
+    private lateinit var onItemClickCallback: OnItemClickCallback
+
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
+
+    interface OnItemClickCallback {
+        fun onItemClicked(data: UserModel)
+    }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.layout_user_list, viewGroup, false))
+        ViewHolder(
+            LayoutInflater.from(viewGroup.context)
+                .inflate(R.layout.layout_user_list, viewGroup, false)
+        )
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvItemUser: TextView = view.findViewById(R.id.tv_item_user)
@@ -19,11 +33,14 @@ class UserListAdapter(private val listUser: ArrayList<UserModel>) : RecyclerView
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val (name, idUser, imgUrl) = listUser[position]
-        viewHolder.tvItemUser.text = name
+        val imgUrl = listUser[position].imgUrl
+        val login = listUser[position].login
+        viewHolder.tvItemUser.text = login
         Glide.with(viewHolder.itemView.context)
             .load(imgUrl)
             .into(viewHolder.tvImg)
+
+        viewHolder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(listUser[viewHolder.adapterPosition]) }
     }
 
     override fun getItemCount() = listUser.size

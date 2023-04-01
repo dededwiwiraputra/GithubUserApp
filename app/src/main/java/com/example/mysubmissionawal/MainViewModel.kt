@@ -5,13 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide.init
+import com.example.mysubmissionawal.detail.DetailUser
+import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainViewModel: ViewModel() {
+class MainViewModel : ViewModel() {
 
-    companion object{
+    companion object {
         private const val TAG = "MainViewModel"
         private const val DUMMY = "dicoding"
     }
@@ -24,6 +26,9 @@ class MainViewModel: ViewModel() {
 
     private val _searchUserDatas = MutableLiveData<List<ItemsItem>>()
     val serachUser: LiveData<List<ItemsItem>> = _searchUserDatas
+
+    private val _getDetaillUser = MutableLiveData<DetailUsers>()
+    val detailUser: LiveData<DetailUsers> = _getDetaillUser
 
     init {
         findAllUser()
@@ -53,7 +58,7 @@ class MainViewModel: ViewModel() {
         })
     }
 
-     fun setAllUser(query: String) : LiveData<List<ItemsItem>> {
+    fun setAllUser(query: String): LiveData<List<ItemsItem>> {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getUser(query)
         client.enqueue(object : Callback<GithubResponse> {
@@ -68,13 +73,41 @@ class MainViewModel: ViewModel() {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
+
             override fun onFailure(call: Call<GithubResponse>, t: Throwable) {
                 _isLoading.value = false
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
         })
 
-         return serachUser
-
+        return serachUser
     }
+
+
+    fun loginUser(username: String): LiveData<DetailUsers> {
+        _isLoading.value = true
+        ApiConfig.getApiService().getDetailUser(username).enqueue(object : Callback<DetailUsers> {
+            override fun onFailure(call: Call<DetailUsers>, t: Throwable) {
+                _isLoading.value = false
+                Log.d(TAG, "onFailure: ${t.message.toString()}")
+            }
+
+            override fun onResponse(call: Call<DetailUsers>, response: Response<DetailUsers>) {
+                if (response.isSuccessful) {
+                    _isLoading.value = false
+                    val responseObject = response.body()!!
+                    _getDetaillUser.value = DetailUsers(
+                        responseObject.login,
+                        responseObject.name ?: "Anonymous",
+                        responseObject.avatarUrl,
+                        responseObject.followersUrl,
+                        responseObject.followingUrl
+                    )
+                }
+            }
+        })
+
+        return detailUser
+    }
+
 }

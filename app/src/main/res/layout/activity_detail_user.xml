@@ -8,18 +8,18 @@
     android:orientation="vertical"
     tools:context=".detail.DetailUser">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ImageView
         android:id="@+id/profile_image"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@tools:sample/avatars"
-        app:civ_border_width="2dp"
-        android:layout_marginBottom="16dp"
         android:layout_marginTop="64dp"
-        app:civ_border_color="#FFFFFF"/>
+        android:layout_marginBottom="16dp"
+        app:civ_border_color="#FFFFFF"
+        app:civ_border_width="2dp"
+        android:src = "@drawable/ic_launcher_foreground"/>
 
     <TextView
+        android:id = "@+id/nama"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Dede Dwi Wira Putra"
@@ -27,35 +27,36 @@
         android:textSize="24sp" />
 
     <TextView
+        android:id = "@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:text="dededwiwiraputra17@gmail.com"
         android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
-        android:textSize="16sp"
-        android:layout_marginBottom="32dp"/>
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginBottom="32dp">
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="56dp"
             android:text="Followers"
             android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
-            android:textSize="16sp"
-            android:layout_marginEnd="56dp"/>
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="56dp"
             android:text="Following"
             android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
-            android:textSize="16sp"
-            android:layout_marginStart="56dp"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -64,7 +65,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        app:tabTextColor="@android:color/white"/>
+        app:tabTextColor="@android:color/white"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
