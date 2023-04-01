@@ -84,9 +84,6 @@ class MainActivity : AppCompatActivity() {
             searchView.queryHint = "Masukkan nama"
 
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                /*
-                Gunakan method ini ketika search selesai atau OK
-                 */
                 override fun onQueryTextSubmit(query: String): Boolean {
 
                     if (query.isEmpty()) {
@@ -101,10 +98,6 @@ class MainActivity : AppCompatActivity() {
 
                     return true
                 }
-
-                /*
-                Gunakan method ini untuk merespon tiap perubahan huruf pada searchView
-                 */
                 override fun onQueryTextChange(newText: String): Boolean {
                     return false
                 }
