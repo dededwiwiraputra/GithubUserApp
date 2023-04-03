@@ -5,7 +5,6 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiService {
-
     @GET("users")
     @Headers("Authorization: token $token")
     fun getAllUser():Call<GithubResponse>

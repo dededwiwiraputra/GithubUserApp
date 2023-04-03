@@ -99,9 +99,9 @@ data class DetailUsers(
     @field:SerializedName("avatar_url")
     val avatarUrl: String,
 
-    @field:SerializedName("followers_url")
-    val followersUrl: String,
+    @field:SerializedName("followers")
+    val followers: String,
 
-    @field:SerializedName("following_url")
-    val followingUrl: String
+    @field:SerializedName("following")
+    val following: String
 )

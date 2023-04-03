@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide.init
 import com.example.mysubmissionawal.detail.DetailUser
 import com.google.gson.JsonObject
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Thread.sleep
 
 class MainViewModel : ViewModel() {
 
@@ -29,6 +31,7 @@ class MainViewModel : ViewModel() {
 
     private val _getDetaillUser = MutableLiveData<DetailUsers>()
     val detailUser: LiveData<DetailUsers> = _getDetaillUser
+
 
     init {
         findAllUser()
@@ -84,30 +87,32 @@ class MainViewModel : ViewModel() {
     }
 
 
-    fun loginUser(username: String): LiveData<DetailUsers> {
+    fun getLogin(login: String) {
         _isLoading.value = true
-        ApiConfig.getApiService().getDetailUser(username).enqueue(object : Callback<DetailUsers> {
-            override fun onFailure(call: Call<DetailUsers>, t: Throwable) {
-                _isLoading.value = false
-                Log.d(TAG, "onFailure: ${t.message.toString()}")
-            }
 
-            override fun onResponse(call: Call<DetailUsers>, response: Response<DetailUsers>) {
+        val client = ApiConfig.getApiService().getDetailUser(login)
+        client.enqueue(object : Callback<DetailUsers> {
+            override fun onResponse(
+                call: Call<DetailUsers>,
+                response: Response<DetailUsers>
+            ) {
+                _isLoading.value = false
                 if (response.isSuccessful) {
-                    _isLoading.value = false
-                    val responseObject = response.body()!!
-                    _getDetaillUser.value = DetailUsers(
-                        responseObject.login,
-                        responseObject.name ?: "Anonymous",
-                        responseObject.avatarUrl,
-                        responseObject.followersUrl,
-                        responseObject.followingUrl
-                    )
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        _getDetaillUser.value = response.body()
+                    }
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
-        })
 
-        return detailUser
+            override fun onFailure(call: Call<DetailUsers>, t: Throwable) {
+                _isLoading.value = false
+                Log.e(TAG, "onFailure: ${t.message}")
+            }
+        })
     }
+
 
 }

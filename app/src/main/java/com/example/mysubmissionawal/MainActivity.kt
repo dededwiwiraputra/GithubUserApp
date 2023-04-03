@@ -19,11 +19,11 @@ import com.example.mysubmissionawal.databinding.ActivityMainBinding
 import com.example.mysubmissionawal.detail.DetailUser
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
+    private  var _binding: ActivityMainBinding? = null
     private val mainViewModel by viewModels<MainViewModel>()
     private lateinit var rvUserList: RecyclerView
     private lateinit var searchUser: MainViewModel
+    private val binding get() = _binding!!
 
     companion object {
         private const val TAG = "MainActivity"
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val layoutManager = LinearLayoutManager(this)
@@ -73,14 +73,13 @@ class MainActivity : AppCompatActivity() {
 
         adapter.setOnItemClickCallback(object : UserListAdapter.OnItemClickCallback {
             override fun onItemClicked(data: UserModel) {
-                searchUser.loginUser(data.login).observe(this@MainActivity) {
-                    startActivity(
+
+                startActivity(
                         Intent(this@MainActivity, DetailUser::class.java).putExtra(
                             DetailUser.GET_USER,
-                            getAllUserDetailData(it)
+                            data
                         )
                     )
-                }
             }
         })
 
@@ -135,15 +134,9 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun getAllUserDetailData(item: DetailUsers?): UserModel {
-        return UserModel(
-            item!!.name,
-            0,
-            item.avatarUrl,
-            item.followersUrl,
-            item.followingUrl,
-            item.login
-        )
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 

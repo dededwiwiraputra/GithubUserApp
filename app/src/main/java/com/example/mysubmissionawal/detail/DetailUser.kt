@@ -1,15 +1,19 @@
 package com.example.mysubmissionawal.detail
 
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.View
+import androidx.activity.viewModels
 import androidx.annotation.StringRes
-import androidx.viewpager2.widget.ViewPager2
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.example.mysubmissionawal.MainViewModel
 import com.example.mysubmissionawal.R
 import com.example.mysubmissionawal.UserModel
 import com.example.mysubmissionawal.databinding.ActivityDetailUserBinding
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class DetailUser : AppCompatActivity() {
@@ -24,12 +28,19 @@ class DetailUser : AppCompatActivity() {
     }
 
 
-    private lateinit var binding: ActivityDetailUserBinding
+    private var _binding: ActivityDetailUserBinding? = null
+    private lateinit var searchUser: MainViewModel
 
+    private val mainViewModel by viewModels<MainViewModel>()
+    private val binding get() = _binding!!
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDetailUserBinding.inflate(layoutInflater)
+        _binding = ActivityDetailUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        searchUser = ViewModelProvider(this)[MainViewModel::class.java]
 
         val detailFragmentAdapter = DetailFragmentAdapter(this)
         binding.viewPager.adapter = detailFragmentAdapter
@@ -38,21 +49,52 @@ class DetailUser : AppCompatActivity() {
         }.attach()
         supportActionBar?.elevation = 0f
 
-
         val data = intent.getParcelableExtra<UserModel>(GET_USER)!!
 
         Log.d("AHA", "$data")
 
-        getData(data)
+        binding.layoutView.visibility = View.INVISIBLE
+        binding.load.startShimmer()
+
+        mainViewModel.detailUser.observe(this) {
+            binding.apply {
+                Glide.with(this@DetailUser)
+                    .load(it.avatarUrl)
+                    .circleCrop()
+                    .into(profileImage)
+                nama.text = it.name
+                username.text = it.login
+                followers.text = it.followers+" Followers"
+                following.text = it.following+" Following"
+            }
+        }
+
+        mainViewModel.isLoading.observe(this) {
+            showLoading(it)
+        }.apply {
+            Handler().postDelayed({
+                binding.layoutView.visibility = View.VISIBLE
+                binding.load.stopShimmer()
+                binding.load.visibility = View.INVISIBLE
+            }, 1000)
+        }
+
+        getDetailUserApi(data)
 
     }
 
-    private fun getData(data: UserModel) {
-        Glide.with(this)
-            .load(data.imgUrl)
-            .into(binding.profileImage)
-        binding.nama.text = data.name
-        binding.username.text = data.login
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.INVISIBLE
+
+    }
+
+    private fun getDetailUserApi(data: UserModel) {
+        mainViewModel.getLogin(data.login)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }
