@@ -1,14 +1,12 @@
-package com.example.mysubmissionawal
+package com.example.mysubmissionawal.api
 
-import com.example.mysubmissionawal.Utilility.token
+import com.example.mysubmissionawal.model.DetailUsers
+import com.example.mysubmissionawal.model.GithubResponse
+import com.example.mysubmissionawal.Utils.token
 import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiService {
-    @GET("users")
-    @Headers("Authorization: token $token")
-    fun getAllUser():Call<GithubResponse>
-
     @GET("search/users")
     @Headers("Authorization: token $token")
     fun getUser(
@@ -23,13 +21,13 @@ interface ApiService {
 
     @GET("users/{username}/followers")
     @Headers("Authorization: token $token")
-    fun getUser2(
+    fun getUserFollowers(
         @Path("username") username: String
     ): Call<GithubResponse>
 
     @GET("users/{username}/following")
     @Headers("Authorization: token $token")
-    fun getUser3(
+    fun getUserFollowing(
         @Path("username") username: String
     ): Call<GithubResponse>
 }

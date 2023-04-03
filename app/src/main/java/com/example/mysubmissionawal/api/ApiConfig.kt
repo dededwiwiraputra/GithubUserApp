@@ -1,4 +1,4 @@
-package com.example.mysubmissionawal
+package com.example.mysubmissionawal.api
 
 import androidx.viewbinding.BuildConfig
 import okhttp3.OkHttpClient

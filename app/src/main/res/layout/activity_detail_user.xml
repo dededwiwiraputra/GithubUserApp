@@ -21,11 +21,11 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="64dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
                 android:src = "@drawable/ic_launcher_foreground"
                 app:civ_border_color="#FFFFFF"
@@ -35,7 +35,7 @@
                 android:id="@+id/nama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dede Dwi Wira Putra"
+                android:text=""
                 android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                 android:textSize="24sp" />
 
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
-                android:text="dededwiwiraputra17@gmail.com"
+                android:text=""
                 android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
                 android:textSize="16sp" />
 
@@ -59,7 +59,7 @@
                     android:id="@+id/followers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="56dp"
+                    android:layout_marginEnd="32dp"
                     android:text="Followers"
                     android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
                     android:textSize="16sp" />
@@ -68,7 +68,7 @@
                     android:id="@+id/following"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="56dp"
+                    android:layout_marginStart="32dp"
                     android:text="Following"
                     android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
                     android:textSize="16sp" />

@@ -14,14 +14,16 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.mysubmissionawal.adapter.UserListAdapter
 import com.example.mysubmissionawal.databinding.ActivityMainBinding
 import com.example.mysubmissionawal.detail.DetailUser
+import com.example.mysubmissionawal.model.ItemsItem
+import com.example.mysubmissionawal.model.MainViewModel
+import com.example.mysubmissionawal.model.UserModel
 
 class MainActivity : AppCompatActivity() {
     private  var _binding: ActivityMainBinding? = null
     private val mainViewModel by viewModels<MainViewModel>()
-    private lateinit var rvUserList: RecyclerView
     private lateinit var searchUser: MainViewModel
     private val binding get() = _binding!!
 
@@ -34,6 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        supportActionBar?.title = "Github User"
 
         val layoutManager = LinearLayoutManager(this)
         binding.rvUser.layoutManager = layoutManager
@@ -58,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         for (user in userDatas) {
             listUser.add(
                 UserModel(
-                    "",
+                    "Unknown Name",
                     user.id,
                     user.avatarUrl,
                     user.followersUrl,
@@ -82,8 +86,6 @@ class MainActivity : AppCompatActivity() {
                     )
             }
         })
-
-        Log.d("TEST", "Hayolo")
     }
 
     private fun showLoading(isLoading: Boolean) {

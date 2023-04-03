@@ -10,10 +10,10 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.mysubmissionawal.MainViewModel
 import com.example.mysubmissionawal.R
-import com.example.mysubmissionawal.UserModel
 import com.example.mysubmissionawal.databinding.ActivityDetailUserBinding
+import com.example.mysubmissionawal.model.MainViewModel
+import com.example.mysubmissionawal.model.UserModel
 import com.google.android.material.tabs.TabLayoutMediator
 
 class DetailUser : AppCompatActivity() {
@@ -40,6 +40,9 @@ class DetailUser : AppCompatActivity() {
         _binding = ActivityDetailUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val headBar = supportActionBar
+        headBar!!.title = "Detail User"
+
         searchUser = ViewModelProvider(this)[MainViewModel::class.java]
 
         val detailFragmentAdapter = DetailFragmentAdapter(this)
@@ -49,9 +52,19 @@ class DetailUser : AppCompatActivity() {
         }.attach()
         supportActionBar?.elevation = 0f
 
-        val data = intent.getParcelableExtra<UserModel>(GET_USER)!!
+//        getApi()
 
-        Log.d("AHA", "$data")
+        val data = intent.getParcelableExtra<UserModel>(GET_USER)!!
+        getDetailUserApi(data)
+
+        Log.d("AHA", "${data.login}")
+
+
+
+        val bundle = Bundle()
+        bundle.putString("data", "${data.login}")
+        val fragobj = FollowersFragment()
+        fragobj.setArguments(bundle)
 
         binding.layoutView.visibility = View.INVISIBLE
         binding.load.startShimmer()
@@ -79,8 +92,20 @@ class DetailUser : AppCompatActivity() {
             }, 1000)
         }
 
-        getDetailUserApi(data)
+//        getDetailUserApi(data)
 
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, FollowersFragment.newInstance("${data.login}","data2"),"FollowersFragment")
+            .commit();
+
+        headBar.setDisplayHomeAsUpEnabled(true)
+        headBar.setDisplayHomeAsUpEnabled(true)
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun showLoading(isLoading: Boolean) {
@@ -88,8 +113,13 @@ class DetailUser : AppCompatActivity() {
 
     }
 
+//    private fun getApi(){
+//        val data = intent.getParcelableExtra<UserModel>(GET_USER)!!
+//        getDetailUserApi(data)
+//    }
+
     private fun getDetailUserApi(data: UserModel) {
-        mainViewModel.getLogin(data.login)
+        mainViewModel.getDetailListUser(data.login)
     }
 
     override fun onDestroy() {

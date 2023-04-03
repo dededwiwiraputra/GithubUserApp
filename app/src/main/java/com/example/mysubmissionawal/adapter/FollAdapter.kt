@@ -1,4 +1,4 @@
-package com.example.mysubmissionawal
+package com.example.mysubmissionawal.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +7,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.mysubmissionawal.R
+import com.example.mysubmissionawal.model.UserModel
 
-class UserListAdapter(private val listUser: ArrayList<UserModel>) :
-    RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
+class FollAdapter(private val listUser: ArrayList<UserModel>) :
+    RecyclerView.Adapter<FollAdapter.ViewHolder>() {
 
     private lateinit var onItemClickCallback: OnItemClickCallback
 
