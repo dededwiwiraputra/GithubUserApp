@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.mysubmissionawal.R
 import com.example.mysubmissionawal.databinding.ActivityDetailUserBinding
@@ -17,6 +18,7 @@ import com.example.mysubmissionawal.model.UserModel
 import com.google.android.material.tabs.TabLayoutMediator
 
 class DetailUser : AppCompatActivity() {
+
     companion object {
         @StringRes
         private val TAB_TITLES = intArrayOf(
@@ -45,26 +47,28 @@ class DetailUser : AppCompatActivity() {
 
         searchUser = ViewModelProvider(this)[MainViewModel::class.java]
 
+        val data = intent.getParcelableExtra<UserModel>(GET_USER)!!
+        getDetailUserApi(data)
+
+//        val detailFragmentAdapter = DetailFragmentAdapter(this)
+//        binding.viewPager.adapter = detailFragmentAdapter
+//        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+//            tab.text = resources.getString(TAB_TITLES[position])
+//        }.attach()
+
+        val value = Bundle()
+        value.putString("dataValue", "${data.login}")
         val detailFragmentAdapter = DetailFragmentAdapter(this)
+        detailFragmentAdapter.setBundle(value)
         binding.viewPager.adapter = detailFragmentAdapter
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
         supportActionBar?.elevation = 0f
 
-//        getApi()
-
-        val data = intent.getParcelableExtra<UserModel>(GET_USER)!!
-        getDetailUserApi(data)
+        Log.d("TAG_ACT", "$value")
 
         Log.d("AHA", "${data.login}")
-
-
-
-        val bundle = Bundle()
-        bundle.putString("data", "${data.login}")
-        val fragobj = FollowersFragment()
-        fragobj.setArguments(bundle)
 
         binding.layoutView.visibility = View.INVISIBLE
         binding.load.startShimmer()
@@ -94,9 +98,7 @@ class DetailUser : AppCompatActivity() {
 
 //        getDetailUserApi(data)
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, FollowersFragment.newInstance("${data.login}","data2"),"FollowersFragment")
-            .commit();
+
 
         headBar.setDisplayHomeAsUpEnabled(true)
         headBar.setDisplayHomeAsUpEnabled(true)
@@ -113,10 +115,10 @@ class DetailUser : AppCompatActivity() {
 
     }
 
-//    private fun getApi(){
-//        val data = intent.getParcelableExtra<UserModel>(GET_USER)!!
-//        getDetailUserApi(data)
-//    }
+    fun getApi(): String {
+        val data = intent.getParcelableExtra<UserModel>(GET_USER)!!
+        return data.login
+    }
 
     private fun getDetailUserApi(data: UserModel) {
         mainViewModel.getDetailListUser(data.login)

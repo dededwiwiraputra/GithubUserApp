@@ -28,8 +28,8 @@ class MainViewModel : ViewModel() {
     private val _getDetaillUser = MutableLiveData<DetailUsers>()
     val detailUser: LiveData<DetailUsers> = _getDetaillUser
 
-    private val _getUserFollowers = MutableLiveData<List<ItemsItem>>()
-    val userFollowers: LiveData<List<ItemsItem>> = _getUserFollowers
+    private val _getUserFollowers = MutableLiveData<DetailUsers>()
+    val userFollowers: LiveData<DetailUsers> = _getUserFollowers
 
     private val _getUserFollowing = MutableLiveData<List<ItemsItem>>()
     val userFollowing: LiveData<List<ItemsItem>> = _getUserFollowing
@@ -116,25 +116,27 @@ class MainViewModel : ViewModel() {
         })
     }
 
-    fun findUserFollowers(value: String): LiveData<List<ItemsItem>> {
-        _isLoading.value = true
+    fun findUserFollowers(value: String): LiveData<DetailUsers> {
         val client = ApiConfig.getApiService().getUserFollowers(value)
-        client.enqueue(object : Callback<GithubResponse> {
+        client.enqueue(object : Callback<DetailUsers> {
             override fun onResponse(
-                call: Call<GithubResponse>,
-                response: Response<GithubResponse>
+                call: Call<DetailUsers>,
+                response: Response<DetailUsers>
             ) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
-                    _getUserFollowers.value = response.body()?.items
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        _getUserFollowers.value = response.body()
+                    }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 
-            override fun onFailure(call: Call<GithubResponse>, t: Throwable) {
+            override fun onFailure(call: Call<DetailUsers>, t: Throwable) {
                 _isLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
+                Log.e(TAG, "onGagal: ${t.message}")
             }
         })
         return userFollowers
