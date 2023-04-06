@@ -11,7 +11,9 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysubmissionawal.adapter.UserListAdapter
@@ -20,6 +22,7 @@ import com.example.mysubmissionawal.detail.DetailUser
 import com.example.mysubmissionawal.model.ItemsItem
 import com.example.mysubmissionawal.model.MainViewModel
 import com.example.mysubmissionawal.model.UserModel
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private  var _binding: ActivityMainBinding? = null

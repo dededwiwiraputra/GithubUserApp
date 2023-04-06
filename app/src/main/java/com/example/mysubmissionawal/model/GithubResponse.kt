@@ -78,17 +78,6 @@ data class ItemsItem(
     val name: String
 )
 
-data class UserListDisplay(
-    @field:SerializedName("login")
-    val login: String,
-
-    @field:SerializedName("id")
-    val id: Int,
-
-    @field:SerializedName("avatar_url")
-    val avatarUrl: String,
-)
-
 data class DetailUsers(
     @field:SerializedName("login")
     val login: String,
@@ -104,4 +93,12 @@ data class DetailUsers(
 
     @field:SerializedName("following")
     val following: String
+)
+
+data class Follow(
+    @field:SerializedName("login")
+    val login: String,
+
+    @field:SerializedName("avatar_url")
+    val avatarUrl: String,
 )

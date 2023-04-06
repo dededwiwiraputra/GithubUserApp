@@ -3,7 +3,7 @@ package com.example.mysubmissionawal.api
 import com.example.mysubmissionawal.model.DetailUsers
 import com.example.mysubmissionawal.model.GithubResponse
 import com.example.mysubmissionawal.Utils.token
-import com.example.mysubmissionawal.model.FollowResponse
+import com.example.mysubmissionawal.model.Follow
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -24,11 +24,11 @@ interface ApiService {
     @Headers("Authorization: token $token")
     fun getUserFollowers(
         @Path("username") username: String
-    ): Call<DetailUsers>
+    ): Call<List<Follow>>
 
     @GET("users/{username}/following")
     @Headers("Authorization: token $token")
     fun getUserFollowing(
         @Path("username") username: String
-    ): Call<GithubResponse>
+    ): Call<List<Follow>>
 }

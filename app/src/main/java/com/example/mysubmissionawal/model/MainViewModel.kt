@@ -28,12 +28,11 @@ class MainViewModel : ViewModel() {
     private val _getDetaillUser = MutableLiveData<DetailUsers>()
     val detailUser: LiveData<DetailUsers> = _getDetaillUser
 
-    private val _getUserFollowers = MutableLiveData<DetailUsers>()
-    val userFollowers: LiveData<DetailUsers> = _getUserFollowers
+    private val _getUserFollowers = MutableLiveData<List<Follow>>()
+    val userFollowers: LiveData<List<Follow>> = _getUserFollowers
 
-    private val _getUserFollowing = MutableLiveData<List<ItemsItem>>()
-    val userFollowing: LiveData<List<ItemsItem>> = _getUserFollowing
-
+    private val _getUserFollowing = MutableLiveData<List<Follow>>()
+    val userFollowing: LiveData<List<Follow>> = _getUserFollowing
 
     init {
         findAllUser()
@@ -116,12 +115,12 @@ class MainViewModel : ViewModel() {
         })
     }
 
-    fun findUserFollowers(value: String): LiveData<DetailUsers> {
+    fun findUserFollowers(value: String): LiveData<List<Follow>> {
         val client = ApiConfig.getApiService().getUserFollowers(value)
-        client.enqueue(object : Callback<DetailUsers> {
+        client.enqueue(object : Callback<List<Follow>> {
             override fun onResponse(
-                call: Call<DetailUsers>,
-                response: Response<DetailUsers>
+                call: Call<List<Follow>>,
+                response: Response<List<Follow>>
             ) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
@@ -134,7 +133,7 @@ class MainViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<DetailUsers>, t: Throwable) {
+            override fun onFailure(call: Call<List<Follow>>, t: Throwable) {
                 _isLoading.value = false
                 Log.e(TAG, "onGagal: ${t.message}")
             }
@@ -142,25 +141,27 @@ class MainViewModel : ViewModel() {
         return userFollowers
     }
 
-    fun findUserFollowing(value: String): LiveData<List<ItemsItem>> {
-        _isLoading.value = true
+    fun findUserFollowing(value: String): LiveData<List<Follow>> {
         val client = ApiConfig.getApiService().getUserFollowing(value)
-        client.enqueue(object : Callback<GithubResponse> {
+        client.enqueue(object : Callback<List<Follow>> {
             override fun onResponse(
-                call: Call<GithubResponse>,
-                response: Response<GithubResponse>
+                call: Call<List<Follow>>,
+                response: Response<List<Follow>>
             ) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
-                    _getUserFollowing.value = response.body()?.items
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        _getUserFollowing.value = response.body()
+                    }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 
-            override fun onFailure(call: Call<GithubResponse>, t: Throwable) {
+            override fun onFailure(call: Call<List<Follow>>, t: Throwable) {
                 _isLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
+                Log.e(TAG, "onGagal: ${t.message}")
             }
         })
         return userFollowing

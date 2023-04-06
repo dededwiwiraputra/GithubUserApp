@@ -3,13 +3,11 @@ package com.example.mysubmissionawal.detail
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.mysubmissionawal.R
 import com.example.mysubmissionawal.databinding.ActivityDetailUserBinding
@@ -50,12 +48,6 @@ class DetailUser : AppCompatActivity() {
         val data = intent.getParcelableExtra<UserModel>(GET_USER)!!
         getDetailUserApi(data)
 
-//        val detailFragmentAdapter = DetailFragmentAdapter(this)
-//        binding.viewPager.adapter = detailFragmentAdapter
-//        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
-//            tab.text = resources.getString(TAB_TITLES[position])
-//        }.attach()
-
         val value = Bundle()
         value.putString("dataValue", "${data.login}")
         val detailFragmentAdapter = DetailFragmentAdapter(this)
@@ -65,10 +57,6 @@ class DetailUser : AppCompatActivity() {
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
         supportActionBar?.elevation = 0f
-
-        Log.d("TAG_ACT", "$value")
-
-        Log.d("AHA", "${data.login}")
 
         binding.layoutView.visibility = View.INVISIBLE
         binding.load.startShimmer()
@@ -96,10 +84,6 @@ class DetailUser : AppCompatActivity() {
             }, 1000)
         }
 
-//        getDetailUserApi(data)
-
-
-
         headBar.setDisplayHomeAsUpEnabled(true)
         headBar.setDisplayHomeAsUpEnabled(true)
 
@@ -113,11 +97,6 @@ class DetailUser : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.INVISIBLE
 
-    }
-
-    fun getApi(): String {
-        val data = intent.getParcelableExtra<UserModel>(GET_USER)!!
-        return data.login
     }
 
     private fun getDetailUserApi(data: UserModel) {

@@ -8,21 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mysubmissionawal.R
-import com.example.mysubmissionawal.model.UserModel
+import com.example.mysubmissionawal.model.Follow
 
-class FollAdapter(private val listUser: ArrayList<UserModel>) :
+class FollAdapter(private val listUser: List<Follow>) :
     RecyclerView.Adapter<FollAdapter.ViewHolder>() {
-
-    private lateinit var onItemClickCallback: OnItemClickCallback
-
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
-
-    interface OnItemClickCallback {
-        fun onItemClicked(data: UserModel)
-    }
-
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) =
         ViewHolder(
             LayoutInflater.from(viewGroup.context)
@@ -35,14 +24,12 @@ class FollAdapter(private val listUser: ArrayList<UserModel>) :
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val imgUrl = listUser[position].imgUrl
+        val imgUrl = listUser[position].avatarUrl
         val login = listUser[position].login
         viewHolder.tvItemUser.text = login
         Glide.with(viewHolder.itemView.context)
             .load(imgUrl)
             .into(viewHolder.tvImg)
-
-        viewHolder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(listUser[viewHolder.adapterPosition]) }
     }
 
     override fun getItemCount() = listUser.size
