@@ -79,23 +79,34 @@ data class ItemsItem(
 )
 
 data class DetailUsers(
+    @field:SerializedName("id")
+    val id: Int = 0,
+
     @field:SerializedName("login")
-    val login: String,
+    val login: String? = null,
 
     @field:SerializedName("name")
-    val name: String,
+    val name: String? = null,
 
     @field:SerializedName("avatar_url")
-    val avatarUrl: String,
+    val avatarUrl: String? = null,
 
     @field:SerializedName("followers")
-    val followers: String,
+    val followers: String? = null,
 
     @field:SerializedName("following")
-    val following: String
+    val following: String? = null
 )
 
 data class Follow(
+    @field:SerializedName("login")
+    val login: String,
+
+    @field:SerializedName("avatar_url")
+    val avatarUrl: String,
+)
+
+data class Favorite(
     @field:SerializedName("login")
     val login: String,
 

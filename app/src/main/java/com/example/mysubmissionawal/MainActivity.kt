@@ -19,14 +19,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mysubmissionawal.adapter.UserListAdapter
 import com.example.mysubmissionawal.databinding.ActivityMainBinding
 import com.example.mysubmissionawal.detail.DetailUser
+import com.example.mysubmissionawal.detail.favorite.FavoriteFactory
 import com.example.mysubmissionawal.model.ItemsItem
 import com.example.mysubmissionawal.model.MainViewModel
 import com.example.mysubmissionawal.model.UserModel
+import com.example.mysubmissionawal.theme.ThemeActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private  var _binding: ActivityMainBinding? = null
-    private val mainViewModel by viewModels<MainViewModel>()
+    private lateinit var mainViewModel: MainViewModel
     private lateinit var searchUser: MainViewModel
     private val binding get() = _binding!!
 
@@ -47,7 +49,15 @@ class MainActivity : AppCompatActivity() {
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvUser.addItemDecoration(itemDecoration)
 
-        searchUser = ViewModelProvider(this)[MainViewModel::class.java]
+        mainViewModel = ViewModelProvider(
+            this,
+            FavoriteFactory.getInstance(this.application)
+        )[MainViewModel::class.java]
+
+        searchUser = ViewModelProvider(
+            this,
+            FavoriteFactory.getInstance(this.application)
+        )[MainViewModel::class.java]
 
 
         mainViewModel.listUser.observe(this) { userDatas ->
@@ -84,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(
                         Intent(this@MainActivity, DetailUser::class.java).putExtra(
                             DetailUser.GET_USER,
-                            data
+                            data.login
                         )
                     )
             }
@@ -102,38 +112,48 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.search) {
-            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-            val searchView = item.actionView as SearchView
+        when (item.itemId) {
+            R.id.search -> {
+                val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+                val searchView = item.actionView as SearchView
 
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
 
-            searchView.queryHint = "Masukkan nama"
+                searchView.queryHint = "Masukkan nama"
 
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String): Boolean {
 
-                    if (query.isEmpty()) {
-                        showLoading(true)
+                        if (query.isEmpty()) {
+                            showLoading(true)
+                        }
+
+                        searchUser.setAllUser(query).observe(this@MainActivity) {
+                            getUserData(it)
+                        }
+
+                        searchView.clearFocus()
+
+                        return true
                     }
 
-                    searchUser.setAllUser(query).observe(this@MainActivity) {
-                        getUserData(it)
+                    override fun onQueryTextChange(newText: String): Boolean {
+                        mainViewModel.listUser.observe(this@MainActivity) { userDatas ->
+                            Log.d(TAG, "$userDatas")
+                            getUserData(userDatas)
+                        }
+                        return false
                     }
+                })
+            }
 
-                    searchView.clearFocus()
+            R.id.theme -> {
+                startActivity(Intent(this, ThemeActivity::class.java))
+            }
 
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String): Boolean {
-                    mainViewModel.listUser.observe(this@MainActivity) { userDatas ->
-                        Log.d(TAG, "$userDatas")
-                        getUserData(userDatas)
-                    }
-                    return false
-                }
-            })
+            R.id.favorites -> {
+                startActivity(Intent(this, FavoriteActivity::class.java))
+            }
         }
 
         return super.onOptionsItemSelected(item)

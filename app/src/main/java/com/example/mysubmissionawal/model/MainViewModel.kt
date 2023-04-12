@@ -1,15 +1,19 @@
 package com.example.mysubmissionawal.model
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mysubmissionawal.api.ApiConfig
+import com.example.mysubmissionawal.detail.favorite.FavoriteDatabase
+import com.example.mysubmissionawal.detail.favorite.FavoriteEntity
+import com.example.mysubmissionawal.detail.favorite.FavoriteRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : ViewModel() {
 
     companion object {
         private const val TAG = "MainViewModel"
@@ -167,4 +171,12 @@ class MainViewModel : ViewModel() {
         return userFollowing
     }
 
+    private val favoriteRepository = FavoriteRepository(application)
+    fun getAllFavorites(): LiveData<List<FavoriteEntity>> = favoriteRepository.getAllFavorites()
+    fun insert(user: FavoriteEntity) {
+        favoriteRepository.insert(user)
+    }
+    fun delete(id: Int) {
+        favoriteRepository.delete(id)
+    }
 }
